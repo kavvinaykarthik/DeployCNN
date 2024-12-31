@@ -5,13 +5,22 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.losses import MeanAbsoluteError
 from tensorflow.keras.utils import get_custom_objects
 from PIL import Image
+import gdown
 import base64
 
 # Register the 'mae' function (Mean Absolute Error)
 get_custom_objects()['mae'] = MeanAbsoluteError()
 
-# Load model
-model = load_model('age_gender_model2.h5')
+# Download model from Google Drive
+def download_model_from_drive():
+    file_id = '1jHc-XZ-mEQkj-l7-lVPILcqRiGrjPEg7'  # Replace with your actual file ID
+    output = 'age_gender_model2.h5'
+    gdown.download(f'https://drive.google.com/uc?export=download&id={file_id}', output, quiet=False)
+    model = load_model(output)
+    return model
+
+# Load model from Google Drive
+model = download_model_from_drive()
 
 # Gender prediction dictionary
 gender_dict = {0: 'Male', 1: 'Female'}
@@ -117,7 +126,7 @@ st.markdown("""
         1. Upload an image or use the webcam to capture an image.<br>
         2. The model predicts the age and gender of the person in the image.<br>
         3. The results are displayed, including the predicted gender, age, and age range.<br>
-        4. Make sure that your face get enough brightness.<br><br>
+        4. Make sure that your face gets enough brightness.<br><br>
         This is powered by a trained deep learning model using Convolutional Neural Networks (CNN).
     </div>
 """, unsafe_allow_html=True)
